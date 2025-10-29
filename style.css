@@ -9,8 +9,11 @@ figure { margin: 0; }
 img { display: block; width: 100%; height: auto; border-radius: 10px; }
 figcaption { margin-top: 6px; font-size: 14px; color: #555; }
 .foot { color: #666; font-size: 14px; }
+
+/* 👉 Force next items to start on a new row in the grid */
+.break { grid-column: 1 / -1; }
+
 @media (prefers-color-scheme: dark) {
   body { background:#0b0b0c; color:#eee; }
   .tag, figcaption, .foot { color:#bbb; }
 }
-
