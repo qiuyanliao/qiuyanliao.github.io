@@ -1,0 +1,45 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Qiuyan Liao — Photo Work</title>
+  <link rel="stylesheet" href="style.css" />
+  <meta name="description" content="Photography portfolio of Qiuyan Liao." />
+</head>
+<body>
+  <header class="wrap">
+    <h1>Qiuyan Liao</h1>
+    <p class="tag">Photography Portfolio</p>
+  </header>
+
+  <main class="wrap">
+    <section class="grid">
+      <!-- Repeat one <figure> per image -->
+      <figure>
+        <a href="photos/work-01.jpg" target="_blank" rel="noopener">
+          <img src="photos/work-01.jpg" alt="Title or short description of photo 1">
+        </a>
+        <figcaption>Title / Location / Year</figcaption>
+      </figure>
+
+      <figure>
+        <a href="photos/work-02.jpg" target="_blank" rel="noopener">
+          <img src="photos/work-02.jpg" alt="Title or short description of photo 2">
+        </a>
+        <figcaption>Title / Location / Year</figcaption>
+      </figure>
+
+      <!-- Add more <figure> blocks as needed -->
+    </section>
+  </main>
+
+  <footer class="wrap foot">
+    © <span id="y"></span> Qiuyan Liao
+  </footer>
+  <script>
+    document.getElementById('y').textContent = new Date().getFullYear();
+  </script>
+</body>
+</html>
+
