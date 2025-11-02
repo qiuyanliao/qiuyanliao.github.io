@@ -4,8 +4,284 @@
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
   <title>Qiuyan Liao — Photo Work</title>
-  <link rel="stylesheet" href="style.css" />
   <meta name="description" content="Photography portfolio of Qiuyan Liao." />
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+      line-height: 1.6;
+      color: #333;
+      background: #f8f8f8;
+    }
+
+    .wrap {
+      max-width: 1400px;
+      margin: 0 auto;
+      padding: 0 20px;
+    }
+
+    header {
+      text-align: center;
+      padding: 60px 20px 40px;
+      background: white;
+      margin-bottom: 40px;
+      box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+    }
+
+    h1 {
+      font-size: 2.5rem;
+      font-weight: 300;
+      margin-bottom: 10px;
+      color: #222;
+    }
+
+    .tag {
+      color: #666;
+      font-size: 1.1rem;
+      font-weight: 300;
+    }
+
+    /* Masonry Grid Layout */
+    .gallery {
+      column-count: 3;
+      column-gap: 20px;
+      padding-bottom: 40px;
+    }
+
+    @media (max-width: 1024px) {
+      .gallery {
+        column-count: 2;
+      }
+    }
+
+    @media (max-width: 640px) {
+      .gallery {
+        column-count: 1;
+      }
+    }
+
+    .gallery-item {
+      break-inside: avoid;
+      margin-bottom: 20px;
+      position: relative;
+      overflow: hidden;
+      border-radius: 8px;
+      cursor: pointer;
+      transition: transform 0.3s ease, box-shadow 0.3s ease;
+      background: white;
+    }
+
+    .gallery-item:hover {
+      transform: translateY(-4px);
+      box-shadow: 0 12px 24px rgba(0,0,0,0.15);
+    }
+
+    .gallery-item img {
+      width: 100%;
+      display: block;
+      transition: transform 0.3s ease;
+    }
+
+    .gallery-item:hover img {
+      transform: scale(1.05);
+    }
+
+    /* Lightbox Styles */
+    .lightbox {
+      display: none;
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0, 0, 0, 0.95);
+      z-index: 1000;
+      animation: fadeIn 0.3s ease;
+    }
+
+    .lightbox.active {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; }
+      to { opacity: 1; }
+    }
+
+    .lightbox-content {
+      max-width: 90%;
+      max-height: 90%;
+      position: relative;
+    }
+
+    .lightbox-image {
+      max-width: 100%;
+      max-height: 90vh;
+      display: block;
+      margin: 0 auto;
+      border-radius: 4px;
+      box-shadow: 0 0 50px rgba(0,0,0,0.5);
+    }
+
+    .lightbox-close {
+      position: absolute;
+      top: 20px;
+      right: 20px;
+      font-size: 40px;
+      color: white;
+      cursor: pointer;
+      background: rgba(0,0,0,0.5);
+      width: 50px;
+      height: 50px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: background 0.3s ease;
+      z-index: 1001;
+    }
+
+    .lightbox-close:hover {
+      background: rgba(0,0,0,0.8);
+    }
+
+    .lightbox-nav {
+      position: absolute;
+      top: 50%;
+      transform: translateY(-50%);
+      font-size: 50px;
+      color: white;
+      cursor: pointer;
+      background: rgba(0,0,0,0.5);
+      width: 60px;
+      height: 60px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: background 0.3s ease;
+      user-select: none;
+    }
+
+    .lightbox-nav:hover {
+      background: rgba(0,0,0,0.8);
+    }
+
+    .lightbox-prev {
+      left: 20px;
+    }
+
+    .lightbox-next {
+      right: 20px;
+    }
+
+    .lightbox-counter {
+      position: absolute;
+      bottom: 20px;
+      left: 50%;
+      transform: translateX(-50%);
+      color: white;
+      background: rgba(0,0,0,0.6);
+      padding: 10px 20px;
+      border-radius: 20px;
+      font-size: 14px;
+    }
+
+    .lightbox-controls {
+      position: absolute;
+      top: 20px;
+      left: 50%;
+      transform: translateX(-50%);
+      display: flex;
+      gap: 10px;
+      z-index: 1001;
+    }
+
+    .control-btn {
+      background: rgba(0,0,0,0.5);
+      color: white;
+      border: none;
+      padding: 10px 20px;
+      border-radius: 20px;
+      cursor: pointer;
+      font-size: 14px;
+      transition: background 0.3s ease;
+    }
+
+    .control-btn:hover {
+      background: rgba(0,0,0,0.8);
+    }
+
+    .control-btn.active {
+      background: rgba(255,255,255,0.3);
+    }
+
+    footer {
+      text-align: center;
+      padding: 40px 20px;
+      color: #666;
+      background: white;
+      margin-top: 40px;
+      box-shadow: 0 -2px 10px rgba(0,0,0,0.05);
+    }
+
+    /* Loading Animation */
+    .loading {
+      text-align: center;
+      padding: 40px;
+      color: #666;
+      font-size: 1.2rem;
+    }
+
+    .loading::after {
+      content: '...';
+      animation: dots 1.5s infinite;
+    }
+
+    @keyframes dots {
+      0%, 20% { content: '.'; }
+      40% { content: '..'; }
+      60%, 100% { content: '...'; }
+    }
+
+    .error {
+      text-align: center;
+      padding: 40px;
+      color: #d32f2f;
+      background: #ffebee;
+      border-radius: 8px;
+      margin: 20px;
+    }
+
+    @media (max-width: 768px) {
+      .lightbox-nav {
+        width: 50px;
+        height: 50px;
+        font-size: 30px;
+      }
+      
+      .lightbox-prev {
+        left: 10px;
+      }
+      
+      .lightbox-next {
+        right: 10px;
+      }
+      
+      .lightbox-close {
+        width: 40px;
+        height: 40px;
+        font-size: 30px;
+      }
+    }
+  </style>
 </head>
 <body>
   <header class="wrap">
@@ -14,78 +290,217 @@
   </header>
 
   <main class="wrap">
-    <section class="grid">
-      <!-- Repeat one <figure> per image -->
-      <figure>
-        <a href="photos/work-01.jpg" target="_blank" rel="noopener">
-          <img src="photos/work-01.jpg" alt="Title or short description of photo 1">
-        </a>
-      </figure>
-
-      <figure>
-        <a href="photos/work-02.jpg" target="_blank" rel="noopener">
-          <img src="photos/work-02.jpg" alt="Title or short description of photo 2">
-        </a>
-      </figure>
-
-            <figure>
-        <a href="photos/work-03.jpg" target="_blank" rel="noopener">
-          <img src="photos/work-03.jpg" alt="Title or short description of photo 3">
-        </a>
-      </figure>
-
-     <div class="break"></div>  <!-- forces new row -->
-
-      <figure>
-        <a href="photos/work-04.jpg" target="_blank" rel="noopener">
-          <img src="photos/work-04.jpg" alt="Title or short description of photo 4">
-        </a>
-      </figure>
-
-            <figure>
-        <a href="photos/work-07.jpg" target="_blank" rel="noopener">
-          <img src="photos/work-07.jpg" alt="Title or short description of photo 5">
-        </a>
-      </figure>
-      <figure>
-        <a href="photos/work-08.jpg" target="_blank" rel="noopener">
-          <img src="photos/work-08.jpg" alt="Title or short description of photo 6">
-        </a>
-      </figure> 
-         <div class="break"></div>  <!-- forces new row -->
-            <figure>
-        <a href="photos/work-05.jpg" target="_blank" rel="noopener">
-          <img src="photos/work-05.jpg" alt="Title or short description of photo 6">
-        </a>
-      </figure> 
-            <figure>
-        <a href="photos/work-06.jpg" target="_blank" rel="noopener">
-          <img src="photos/work-06.jpg" alt="Title or short description of photo 6">
-        </a>
-      </figure> 
-            <figure>
-        <a href="photos/work-10.jpg" target="_blank" rel="noopener">
-          <img src="photos/work-10.jpg" alt="Title or short description of photo 6">
-        </a>
-      </figure> 
-
-    <div class="break"></div>  <!-- forces new row -->
-      </figure> 
-            <figure>
-        <a href="photos/work-11.jpg" target="_blank" rel="noopener">
-          <img src="photos/work-11.jpg" alt="Title or short description of photo 11">
-        </a>
-      </figure> 
-
-    </section>
+    <div class="gallery" id="gallery">
+      <div class="loading">Loading gallery from GitHub</div>
+    </div>
   </main>
 
-  <footer class="wrap foot">
+  <!-- Lightbox -->
+  <div class="lightbox" id="lightbox">
+    <div class="lightbox-close" id="close">&times;</div>
+    <div class="lightbox-controls">
+      <button class="control-btn" id="toggleSlideshow">▶ Play Slideshow</button>
+    </div>
+    <div class="lightbox-nav lightbox-prev" id="prev">‹</div>
+    <div class="lightbox-content">
+      <img class="lightbox-image" id="lightbox-img" src="" alt="">
+    </div>
+    <div class="lightbox-nav lightbox-next" id="next">›</div>
+    <div class="lightbox-counter" id="counter"></div>
+  </div>
+
+  <footer class="wrap">
     © <span id="y"></span> Qiuyan Liao
   </footer>
+
   <script>
+    // ========================================
+    // CONFIGURATION
+    // ========================================
+    const GITHUB_USER = 'qiuyanliao';
+    const GITHUB_REPO = 'qiuyanliao.github.io';
+    const PHOTOS_PATH = 'photos';
+    
+    // Supported image extensions
+    const IMAGE_EXTENSIONS = ['jpg', 'jpeg', 'png', 'gif', 'webp', 'JPG', 'JPEG', 'PNG', 'GIF', 'WEBP'];
+
+    // ========================================
+    // Gallery Variables
+    // ========================================
+    const gallery = document.getElementById('gallery');
+    let images = [];
+    let currentIndex = 0;
+    let slideshowInterval = null;
+    let isPlaying = false;
+
+    // ========================================
+    // Fetch Images from GitHub API
+    // ========================================
+    async function fetchImages() {
+      try {
+        const apiUrl = `https://api.github.com/repos/${GITHUB_USER}/${GITHUB_REPO}/contents/${PHOTOS_PATH}`;
+        
+        const response = await fetch(apiUrl);
+        
+        if (!response.ok) {
+          throw new Error(`GitHub API returned ${response.status}`);
+        }
+        
+        const data = await response.json();
+        
+        // Filter for image files only
+        images = data
+          .filter(file => {
+            const ext = file.name.split('.').pop();
+            return IMAGE_EXTENSIONS.includes(ext);
+          })
+          .map(file => ({
+            filename: file.name,
+            path: `${PHOTOS_PATH}/${file.name}`,
+            download_url: file.download_url
+          }))
+          .sort((a, b) => a.filename.localeCompare(b.filename));
+        
+        if (images.length === 0) {
+          gallery.innerHTML = '<div class="error">No images found in the photos folder on GitHub.</div>';
+          return;
+        }
+        
+        loadGallery();
+      } catch (error) {
+        console.error('Error fetching images from GitHub:', error);
+        gallery.innerHTML = `
+          <div class="error">
+            <h3>Error loading gallery from GitHub</h3>
+            <p>Could not fetch images from the repository.</p>
+            <p><small>Error: ${error.message}</small></p>
+          </div>
+        `;
+      }
+    }
+
+    // ========================================
+    // Gallery Generation
+    // ========================================
+    function loadGallery() {
+      gallery.innerHTML = '';
+      images.forEach((imageData, index) => {
+        const item = document.createElement('div');
+        item.className = 'gallery-item';
+        item.innerHTML = `<img src="${imageData.path}" alt="${imageData.filename}" loading="lazy">`;
+        item.addEventListener('click', () => openLightbox(index));
+        gallery.appendChild(item);
+      });
+    }
+
+    // ========================================
+    // Lightbox Functionality
+    // ========================================
+    const lightbox = document.getElementById('lightbox');
+    const lightboxImg = document.getElementById('lightbox-img');
+    const closeBtn = document.getElementById('close');
+    const prevBtn = document.getElementById('prev');
+    const nextBtn = document.getElementById('next');
+    const counter = document.getElementById('counter');
+    const toggleSlideshowBtn = document.getElementById('toggleSlideshow');
+
+    function openLightbox(index) {
+      currentIndex = index;
+      updateLightbox();
+      lightbox.classList.add('active');
+      document.body.style.overflow = 'hidden';
+    }
+
+    function closeLightbox() {
+      lightbox.classList.remove('active');
+      document.body.style.overflow = '';
+      stopSlideshow();
+    }
+
+    function updateLightbox() {
+      lightboxImg.src = images[currentIndex].path;
+      lightboxImg.alt = images[currentIndex].filename;
+      counter.textContent = `${currentIndex + 1} / ${images.length}`;
+    }
+
+    function nextImage() {
+      currentIndex = (currentIndex + 1) % images.length;
+      updateLightbox();
+    }
+
+    function prevImage() {
+      currentIndex = (currentIndex - 1 + images.length) % images.length;
+      updateLightbox();
+    }
+
+    function startSlideshow() {
+      isPlaying = true;
+      toggleSlideshowBtn.textContent = '⏸ Pause Slideshow';
+      toggleSlideshowBtn.classList.add('active');
+      slideshowInterval = setInterval(nextImage, 3000);
+    }
+
+    function stopSlideshow() {
+      isPlaying = false;
+      toggleSlideshowBtn.textContent = '▶ Play Slideshow';
+      toggleSlideshowBtn.classList.remove('active');
+      if (slideshowInterval) {
+        clearInterval(slideshowInterval);
+        slideshowInterval = null;
+      }
+    }
+
+    function toggleSlideshow() {
+      if (isPlaying) {
+        stopSlideshow();
+      } else {
+        startSlideshow();
+      }
+    }
+
+    // ========================================
+    // Event Listeners
+    // ========================================
+    closeBtn.addEventListener('click', closeLightbox);
+    nextBtn.addEventListener('click', () => {
+      stopSlideshow();
+      nextImage();
+    });
+    prevBtn.addEventListener('click', () => {
+      stopSlideshow();
+      prevImage();
+    });
+    toggleSlideshowBtn.addEventListener('click', toggleSlideshow);
+
+    lightbox.addEventListener('click', (e) => {
+      if (e.target === lightbox) {
+        closeLightbox();
+      }
+    });
+
+    // Keyboard navigation
+    document.addEventListener('keydown', (e) => {
+      if (!lightbox.classList.contains('active')) return;
+      
+      if (e.key === 'Escape') {
+        closeLightbox();
+      } else if (e.key === 'ArrowRight') {
+        stopSlideshow();
+        nextImage();
+      } else if (e.key === 'ArrowLeft') {
+        stopSlideshow();
+        prevImage();
+      } else if (e.key === ' ') {
+        e.preventDefault();
+        toggleSlideshow();
+      }
+    });
+
+    // ========================================
+    // Initialize
+    // ========================================
     document.getElementById('y').textContent = new Date().getFullYear();
+    fetchImages();
   </script>
 </body>
 </html>
-
